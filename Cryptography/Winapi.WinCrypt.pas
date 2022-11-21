@@ -383,6 +383,10 @@ type
   {$EXTERNALSYM HCRYPTHASH}
 {$IFEND}
 
+  PHCRYPTPROV = ^HCRYPTPROV;
+  PHCRYPTHASH = ^HCRYPTHASH;
+  PHCRYPTKEY = ^HCRYPTKEY;
+
 // certenrolls_end
 
 
@@ -1531,7 +1535,7 @@ type
   {$EXTERNALSYM PCMS_DH_KEY_INFO}
 
 function CryptAcquireContextA(
-  out phProv: HCRYPTPROV;
+  phProv: PHCRYPTPROV;
   szContainer: LPCSTR;
   szProvider: LPCSTR;
   dwProvType: DWORD;
@@ -1539,7 +1543,7 @@ function CryptAcquireContextA(
 {$EXTERNALSYM CryptAcquireContextA}
 
 function CryptAcquireContextW(
-  out phProv: HCRYPTPROV;
+  phProv: PHCRYPTPROV;
   szContainer: LPCWSTR;
   szProvider: LPCWSTR;
   dwProvType: DWORD;
@@ -1547,7 +1551,7 @@ function CryptAcquireContextW(
 {$EXTERNALSYM CryptAcquireContextW}
 
 function CryptAcquireContext(
-  out phProv: HCRYPTPROV;
+  phProv: PHCRYPTPROV;
   szContainer: LPCWSTR;
   szProvider: LPCWSTR;
   dwProvType: DWORD;
@@ -1571,7 +1575,7 @@ function CryptDeriveKey(
   Algid: ALG_ID;
   hBaseData: HCRYPTHASH;
   dwFlags: DWORD;
-  out phKey: HCRYPTKEY): BOOL; winapi;
+  phKey: PHCRYPTKEY): BOOL; winapi;
 {$EXTERNALSYM CryptDeriveKey}
 
 function CryptDestroyKey(
@@ -1632,7 +1636,7 @@ function CryptGenRandom(
 function CryptGetUserKey(
   hProv: HCRYPTPROV;
   dwKeySpec: DWORD;
-  out phUserKey: HCRYPTKEY): BOOL; winapi;
+  phUserKey: PHCRYPTKEY): BOOL; winapi;
 {$EXTERNALSYM CryptGetUserKey}
 
 function CryptExportKey(
@@ -1641,7 +1645,7 @@ function CryptExportKey(
   dwBlobType: DWORD;
   dwFlags: DWORD;
   pbData: PByte;
-  var pdwDataLen: DWORD): BOOL; winapi;
+  pdwDataLen: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptExportKey}
 
 function CryptImportKey(
@@ -1659,7 +1663,7 @@ function CryptEncrypt(
   Final: BOOL;
   dwFlags: DWORD;
   pbData: PByte;
-  var pdwDataLen: DWORD;
+  pdwDataLen: PDWORD;
   dwBufLen: DWORD): BOOL; winapi;
 {$EXTERNALSYM CryptEncrypt}
 
@@ -1669,7 +1673,7 @@ function CryptDecrypt(
   Final: BOOL;
   dwFlags: DWORD;
   pbData: PByte;
-  var pdwDataLen: DWORD): BOOL; winapi;
+  pdwDataLen: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptDecrypt}
 
 function CryptCreateHash(
@@ -1677,7 +1681,7 @@ function CryptCreateHash(
   Algid: ALG_ID;
   hKey: HCRYPTKEY;
   dwFlags: DWORD;
-  out phHash: HCRYPTHASH): BOOL; winapi;
+  phHash: PHCRYPTHASH): BOOL; winapi;
 {$EXTERNALSYM CryptCreateHash}
 
 function CryptHashData(
@@ -1703,7 +1707,7 @@ function CryptSignHashA(
   szDescription: LPCSTR;
   dwFlags: DWORD;
   pbSignature: PByte;
-  var pdwSigLen: DWORD): BOOL; winapi;
+  pdwSigLen: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptSignHashA}
 
 function CryptSignHashW(
@@ -1712,7 +1716,7 @@ function CryptSignHashW(
   szDescription: LPCWSTR;
   dwFlags: DWORD;
   pbSignature: PByte;
-  var pdwSigLen: DWORD): BOOL; winapi;
+  pdwSigLen: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptSignHashW}
 
 function CryptSignHash(
@@ -1721,7 +1725,7 @@ function CryptSignHash(
   szDescription: LPCWSTR;
   dwFlags: DWORD;
   pbSignature: PByte;
-  var pdwSigLen: DWORD): BOOL; winapi;
+  pdwSigLen: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptSignHash}
 
 function CryptVerifySignatureA(
@@ -1913,6 +1917,8 @@ function GetEncSChannel(
 type
   HCRYPTPROV_OR_NCRYPT_KEY_HANDLE = ULONG_PTR;
   {$EXTERNALSYM HCRYPTPROV_OR_NCRYPT_KEY_HANDLE}
+
+  PHCRYPTPROV_OR_NCRYPT_KEY_HANDLE = ^HCRYPTPROV_OR_NCRYPT_KEY_HANDLE;
 
 // This type is used where the HCRYPTPROV parameter is no longer used.
 // The caller should always pass in NULL.
@@ -3723,7 +3729,7 @@ function CryptDecodeObject(
   cbEncoded: DWORD;
   dwFlags: DWORD;
   pvStructInfo: Pointer;
-  var pcbStructInfo: DWORD): BOOL; winapi;
+  pcbStructInfo: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CryptDecodeObject}
 
 // When the following flag is set the nocopy optimization is enabled.
@@ -14143,7 +14149,7 @@ function CertGetIssuerCertificateFromStore(
   hCertStore: HCERTSTORE;
   pSubjectContext: PCertContext;
   pPrevIssuerContext: PCertContext;
-  var pdwFlags: DWORD): PCertContext; winapi;
+  pdwFlags: PDWORD): PCertContext; winapi;
 {$EXTERNALSYM CertGetIssuerCertificateFromStore}
 
 //+-------------------------------------------------------------------------
@@ -15128,7 +15134,7 @@ function CertSerializeCertificateStoreElement(
   pCertContext: PCertContext;
   dwFlags: DWORD;
   pbElement: PByte;
-  var pcbElement: DWORD): BOOL; winapi;
+  pcbElement: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CertSerializeCertificateStoreElement}
 
 //+-------------------------------------------------------------------------
@@ -16237,7 +16243,7 @@ function CertGetEnhancedKeyUsage(
   pCertContext: PCertContext;
   dwFlags: DWORD;
   pUsage: PCertEnhKeyUsage;
-  var pcbUsage: DWORD): BOOL; winapi;
+  pcbUsage: PDWORD): BOOL; winapi;
 {$EXTERNALSYM CertGetEnhancedKeyUsage}
 
 //+-------------------------------------------------------------------------
@@ -16561,6 +16567,7 @@ type
 type
   HCERTCHAINENGINE = THandle;
   {$EXTERNALSYM HCERTCHAINENGINE}
+  PHCERTCHAINENGINE = ^HCERTCHAINENGINE;
 //+-------------------------------------------------------------------------
 //  This data structure is optionally pointed to by the pChainPara field
 //  in the CERT_REVOCATION_PARA and CRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO
@@ -17358,7 +17365,7 @@ function CertOIDToAlgId(
 function CertFindExtension(
   pszObjId: LPCSTR;
   cExtensions: DWORD;
-  var rgExtensions: TCertExtension): PCertExtension; winapi;
+  rgExtensions: PCertExtension): PCertExtension; winapi;
 {$EXTERNALSYM CertFindExtension}
 
 //+-------------------------------------------------------------------------
@@ -17781,7 +17788,7 @@ function CryptAcquireCertificatePrivateKey(
   pCert: PCertContext;
   dwFlags: DWORD;
   pvParameters: Pointer;
-  out phCryptProvOrNCryptKey: HCRYPTPROV_OR_NCRYPT_KEY_HANDLE;
+  phCryptProvOrNCryptKey: PHCRYPTPROV_OR_NCRYPT_KEY_HANDLE;
   pdwKeySpec: PDWORD;
   pfCallerFreeProvOrNCryptKey: PBOOL): BOOL; winapi;
 {$EXTERNALSYM CryptAcquireCertificatePrivateKey}
@@ -21715,23 +21722,19 @@ const
 type
   PCertChainEngineConfig = ^TCertChainEngineConfig;
   _CERT_CHAIN_ENGINE_CONFIG = record
-
     cbSize: DWORD;
     hRestrictedRoot: HCERTSTORE;
     hRestrictedTrust: HCERTSTORE;
     hRestrictedOther: HCERTSTORE;
     cAdditionalStore: DWORD;
-    rghAdditionalStore: ^HCERTSTORE;
+    rghAdditionalStore: PHCERTSTORE;
     dwFlags: DWORD;
     dwUrlRetrievalTimeout: DWORD;      // milliseconds
     MaximumCachedCertificates: DWORD;
     CycleDetectionModulus: DWORD;
-
     hExclusiveRoot: HCERTSTORE;
     hExclusiveTrustedPeople: HCERTSTORE;
-
     dwExclusiveFlags: DWORD;
-
   end;
   {$EXTERNALSYM _CERT_CHAIN_ENGINE_CONFIG}
   CERT_CHAIN_ENGINE_CONFIG = _CERT_CHAIN_ENGINE_CONFIG;
@@ -21752,7 +21755,7 @@ const
 
 function CertCreateCertificateChainEngine(
   pConfig: PCERT_CHAIN_ENGINE_CONFIG;
-  out phChainEngine: HCERTCHAINENGINE): BOOL; winapi;
+  phChainEngine: PHCERTCHAINENGINE): BOOL; winapi;
 {$EXTERNALSYM CertCreateCertificateChainEngine}
 
 //
@@ -21938,17 +21941,14 @@ const
 type
   PCertRevocationInfo = ^TCertRevocationInfo;
   _CERT_REVOCATION_INFO = record
-
     cbSize: DWORD;
     dwRevocationResult: DWORD;
     pszRevocationOid: LPCSTR;
     pvOidSpecificInfo: LPVOID;
-
     // fHasFreshnessTime is only set if we are able to retrieve revocation
     // information. For a CRL its CurrentTime - ThisUpdate.
     fHasFreshnessTime: BOOL;
     dwFreshnessTime: DWORD;    // seconds
-
     // NonNULL for CRL base revocation checking
     pCrlInfo: PCertRevocationCRLInfo;
 
@@ -21967,11 +21967,9 @@ type
 type
   PCertTrustListInfo = ^TCertTrustListInfo;
   _CERT_TRUST_LIST_INFO = record
-
     cbSize: DWORD;
     pCtlEntry: PCTLEntry;
     pCtlContext: PCTLContext;
-
   end;
   {$EXTERNALSYM _CERT_TRUST_LIST_INFO}
   CERT_TRUST_LIST_INFO = _CERT_TRUST_LIST_INFO;
@@ -21986,16 +21984,14 @@ type
 
 type
   PCertChainElement = ^TCertChainElement;
+  PPCertChainElement = ^PCertChainElement;
   _CERT_CHAIN_ELEMENT = record
-
     cbSize: DWORD;
     pCertContext: PCertContext;
     TrustStatus: TCertTrustStatus;
     pRevocationInfo: PCertRevocationInfo;
-
     pIssuanceUsage: PCertEnhKeyUsage;       // If NULL, any
     pApplicationUsage: PCertEnhKeyUsage;    // If NULL, any
-
     pwszExtendedErrorInfo: LPCWSTR;    // If NULL, none
   end;
   {$EXTERNALSYM _CERT_CHAIN_ELEMENT}
@@ -22018,14 +22014,13 @@ type
 
 type
   PCertSimpleChain = ^TCertSimpleChain;
+  PPCertSimpleChain = ^PCertSimpleChain;
   _CERT_SIMPLE_CHAIN = record
-
     cbSize: DWORD;
     TrustStatus: TCertTrustStatus;
     cElement: DWORD;
-    rgpElement: ^PCertChainElement;
+    rgpElement: PPCertChainElement;
     pTrustListInfo: PCertTrustListInfo;
-
     // fHasRevocationFreshnessTime is only set if we are able to retrieve
     // revocation information for all elements checked for revocation.
     // For a CRL its CurrentTime - ThisUpdate.
@@ -22062,13 +22057,11 @@ type
     cbSize: DWORD;
     TrustStatus: TCertTrustStatus;
     cChain: DWORD;
-    rgpChain: ^PCertSimpleChain;
-
+    rgpChain: PPCertSimpleChain;
     // Following is returned when CERT_CHAIN_RETURN_LOWER_QUALITY_CONTEXTS
     // is set in dwFlags
     cLowerQualityChainContext: DWORD;
-    rgpLowerQualityChainContext: ^PCertChainContext;
-
+    rgpLowerQualityChainContext: PPCertChainContext;
     // fHasRevocationFreshnessTime is only set if we are able to retrieve
     // revocation information for all elements checked for revocation.
     // For a CRL its CurrentTime - ThisUpdate.
@@ -22077,10 +22070,8 @@ type
     // checked.
     fHasRevocationFreshnessTime: BOOL;
     dwRevocationFreshnessTime: DWORD;    // seconds
-
     // Flags passed when created via CertGetCertificateChain
     dwCreateFlags: DWORD;
-
     // Following is updated with unique Id when the chain context is logged.
     ChainId: TGUID;
   end;
@@ -22109,10 +22100,8 @@ const
 type
   PCertUsageMatch = ^TCertUsageMatch;
   _CERT_USAGE_MATCH = record
-
     dwType: DWORD;
     Usage: TCertEnhKeyUsage;
-
   end;
   {$EXTERNALSYM _CERT_USAGE_MATCH}
   CERT_USAGE_MATCH = _CERT_USAGE_MATCH;
@@ -22139,41 +22128,26 @@ type
 type
   PCertChainPara = ^TCertChainPara;
   _CERT_CHAIN_PARA = record
-
     cbSize: DWORD;
     RequestedUsage: TCertUsageMatch;
-
-//{$IFDEF CERT_CHAIN_PARA_HAS_EXTRA_FIELDS}
-
     // Note, if you #define CERT_CHAIN_PARA_HAS_EXTRA_FIELDS, then, you
     // must zero all unused fields in this data structure.
     // More fields could be added in a future release.
-
     RequestedIssuancePolicy: TCertUsageMatch;
     dwUrlRetrievalTimeout: DWORD;     // milliseconds
     fCheckRevocationFreshnessTime: BOOL;
     dwRevocationFreshnessTime: DWORD; // seconds
-
     // If nonNULL, any cached information before this time is considered
     // time invalid and forces a wire retrieval. When set overrides
     // the registry configuration CacheResync time.
     pftCacheResync: PFileTime;
-
-    //
     // The following is set to check for Strong Signatures
-    //
     pStrongSignPara: PCertStrongSignPara;
-
-    //
     // By default the public key in the end certificate is checked.
     // CERT_CHAIN_STRONG_SIGN_DISABLE_END_CHECK_FLAG can be
     // set in the following flags to not check if the end certificate's public
     // key length is strong.
-    //
     dwStrongSignFlags: DWORD;
-
-//{$ENDIF}
-
   end;
   {$EXTERNALSYM _CERT_CHAIN_PARA}
   CERT_CHAIN_PARA = _CERT_CHAIN_PARA;
@@ -22314,7 +22288,7 @@ function CertGetCertificateChain(
   pChainPara: PCertChainPara;
   dwFlags: DWORD;
   pvReserved: LPVOID;
-  out ppChainContext: PCertChainContext): BOOL; winapi;
+  ppChainContext: PPCertChainContext): BOOL; winapi;
 {$EXTERNALSYM CertGetCertificateChain}
 
 //

@@ -52,6 +52,8 @@ type
   {$EXTERNALSYM HCRYPTHASH}
 {$IFEND}
 
+  PHCRYPTKEY = ^HCRYPTKEY;
+
 //
 // Maximum length of Key name, in characters
 //
