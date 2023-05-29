@@ -7230,6 +7230,10 @@ type
     dwXSize: DWORD;                               // Horizontal size in pixels
     dwYSize: DWORD;                               // Vertical size in pixels
 
+    dwLogotypeImageResolutionChoice: DWORD;
+    dwNumBits: DWORD;
+
+    {use of variant record leads to misalignment compared to C compiler
     case dwLogotypeImageResolutionChoice: DWORD of
     CERT_LOGOTYPE_NO_IMAGE_RESOLUTION_CHOICE:
       (); // No resolution value
@@ -7237,9 +7241,9 @@ type
       (dwNumBits: DWORD);                             // Resolution in bits
 
     CERT_LOGOTYPE_TABLE_SIZE_IMAGE_RESOLUTION_CHOICE:
-      (dwTableSize: DWORD;                            // Number of color or grey tones
+      (dwTableSize: DWORD;                            // Number of color or grey tones}
     pwszLanguage: LPWSTR                          // Optional. Encoded as IA5.
-    );                                            // RFC 3066 Language Tag
+    //);                                            // RFC 3066 Language Tag
   end;
   {$EXTERNALSYM _CERT_LOGOTYPE_IMAGE_INFO}
   CERT_LOGOTYPE_IMAGE_INFO = _CERT_LOGOTYPE_IMAGE_INFO;
@@ -8108,10 +8112,13 @@ type
     cbSize: DWORD;
     pszOID: LPCSTR;
     pwszName: LPCWSTR;
+    dwGroupId: DWORD;
+    dwValue: DWORD;
+    { use of variant record leads to misalignment compared to C++ compiler
     case dwGroupId: DWORD of
     0: (dwValue: DWORD);
     1: (Algid: ALG_ID);
-    2: (dwLength: DWORD;
+    2: (dwLength: DWORD;}
     ExtraInfo: TCryptDataBlob;
 
 //{$IFDEF CRYPT_OID_INFO_HAS_EXTRA_FIELDS}
@@ -8139,7 +8146,7 @@ type
     //      For the ECC algorithms, CRYPT_OID_INFO_ECC_PARAMETERS_ALGORITHM.
     pwszCNGExtraAlgid: LPCWSTR;
 //{$ENDIF}
-    );
+  //);
   end;
   {$EXTERNALSYM _CRYPT_OID_INFO}
   CRYPT_OID_INFO = _CRYPT_OID_INFO;
@@ -12090,6 +12097,8 @@ const
 type
   PCertSystemStoreRelocatePara = ^TCertSystemStoreRelocatePara;
   _CERT_SYSTEM_STORE_RELOCATE_PARA = record
+     Base  : Pointer;
+     Store : Pointer;
    (* union {
         HKEY                hKeyBase;
         void                *pvBase;
@@ -20291,6 +20300,17 @@ type
     // HTTP_STATUS_NOT_MODIFIED if the retrieval returned not modified. In
     // this case TRUE is returned with *ppvObject set to NULL.
     dwHttpStatusCode: DWORD;
+
+    // To get the HTTP response headers for a retrieval error, set the following
+    // pointer to the address of a LPWSTR to receive the list of
+    // headers. L'|' is used as the separator between headers.
+    // The *ppwszErrorResponseHeaders must be freed via CryptMemFree().
+    ppwszErrorResponseHeaders: LPWSTR;
+
+    // To get the content for a retrieval decode error, set the following
+    // pointer to the address of a PCRYPT_DATA_BLOB.
+    // The *ppErrorContentBlob must be freed via CryptMemFree().
+    ppErrorContentBlob: PCRYPT_DATA_BLOB;
   end;
   {$EXTERNALSYM _CRYPT_RETRIEVE_AUX_INFO}
   CRYPT_RETRIEVE_AUX_INFO = _CRYPT_RETRIEVE_AUX_INFO;
