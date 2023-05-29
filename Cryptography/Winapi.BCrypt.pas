@@ -53,6 +53,9 @@ const
 //
 //#define BCRYPT_STRUCT_ALIGNMENT
 
+{$MINENUMSIZE 4}
+{$ALIGN 8}
+
 //
 // DeriveKey KDF Types
 //
